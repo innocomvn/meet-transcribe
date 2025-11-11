@@ -71,18 +71,47 @@
 
 ## 📦 Cài Đặt
 
-### Yêu Cầu
+### 🐳 Quick Start với Docker (Khuyến nghị)
+
+**Cách nhanh nhất để chạy ứng dụng:**
+
+```bash
+# Clone repository
+git clone <repository-url>
+cd meet-transcribe
+
+# Copy environment file
+cp .env.example .env
+
+# Start với Docker
+make quickstart
+
+# Hoặc sử dụng docker-compose trực tiếp
+docker-compose up -d
+```
+
+✅ **Xong!** Truy cập:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000/docs
+
+📖 **Chi tiết**: Xem [DOCKER.md](DOCKER.md) để biết thêm về Docker deployment
+
+---
+
+### 💻 Cài Đặt Thủ Công (Manual Setup)
+
+#### Yêu Cầu
 - Python 3.9+
 - Node.js 18+
 - FFmpeg (cho xử lý audio/video)
 
-### 1. Clone Repository
+#### 1. Clone Repository
 ```bash
 git clone <repository-url>
 cd meet-transcribe
 ```
 
-### 2. Cài Đặt Backend
+#### 2. Cài Đặt Backend
 
 ```bash
 # Tạo virtual environment
@@ -100,16 +129,37 @@ cp .env.example .env
 # Chỉnh sửa .env file với cấu hình của bạn
 ```
 
-### 3. Cài Đặt Frontend
+#### 3. Cài Đặt Frontend
 
 ```bash
 cd frontend
 npm install
 ```
 
+📖 **Chi tiết**: Xem [SETUP.md](SETUP.md) để biết hướng dẫn cài đặt chi tiết
+
 ## 🎮 Sử Dụng
 
-### Chạy Backend
+### 🐳 Với Docker
+
+```bash
+# Development
+make dev           # Start
+make logs          # View logs
+make down          # Stop
+
+# Production
+make prod-build    # Build
+make prod-up       # Deploy
+make prod-logs     # Logs
+
+# Xem thêm commands
+make help
+```
+
+### 💻 Thủ Công
+
+#### Chạy Backend
 
 ```bash
 # Từ thư mục gốc
@@ -120,7 +170,7 @@ python main.py
 Backend sẽ chạy tại: `http://localhost:8000`
 API docs: `http://localhost:8000/docs`
 
-### Chạy Frontend
+#### Chạy Frontend
 
 ```bash
 # Terminal mới
@@ -373,6 +423,26 @@ ALLOWED_ORIGINS=http://localhost:3000
 - Đảm bảo quyền truy cập màn hình
 - Kiểm tra dung lượng đĩa
 
+## 🐳 Docker Deployment
+
+Ứng dụng đã được hoàn toàn dockerized với:
+- ✅ Multi-stage builds cho production
+- ✅ Development và production configs riêng biệt
+- ✅ Nginx reverse proxy
+- ✅ Volume persistence cho uploads và models
+- ✅ Health checks
+- ✅ Resource limits
+- ✅ Makefile commands tiện lợi
+
+Xem [DOCKER.md](DOCKER.md) để biết chi tiết về:
+- Quick start với Docker
+- Development setup
+- Production deployment
+- SSL/HTTPS configuration
+- GPU support
+- Scaling & monitoring
+- Backup & restore
+
 ## 📝 TODO
 
 - [ ] Hỗ trợ nhiều ngôn ngữ
@@ -380,7 +450,7 @@ ALLOWED_ORIGINS=http://localhost:3000
 - [ ] Integration với Zoom/Google Meet
 - [ ] Mobile app
 - [ ] Cloud deployment guide
-- [ ] Docker support
+- [x] Docker support ✅
 
 ## 🤝 Contributing
 

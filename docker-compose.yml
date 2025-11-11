@@ -1,0 +1,66 @@
+# Docker Compose for Development
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: meet-transcribe-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - backend-uploads:/app/uploads
+      - backend-models:/root/.cache/huggingface
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=True
+      - DATABASE_URL=sqlite+aiosqlite:///./meet_transcribe.db
+      - WHISPER_MODEL=vinai/PhoWhisper-small
+      - DEVICE=cpu
+      - UPLOAD_DIR=/app/uploads
+      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8000,http://localhost
+    env_file:
+      - .env
+    networks:
+      - meet-transcribe-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: meet-transcribe-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - meet-transcribe-network
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+volumes:
+  backend-uploads:
+    driver: local
+  backend-models:
+    driver: local
+
+networks:
+  meet-transcribe-network:
+    driver: bridge
