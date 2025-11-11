@@ -345,29 +345,60 @@ WS /ws/{meeting_id}
 - `signaling` - WebRTC signaling
 - `recording_control` - Điều khiển recording
 
-## 🎯 PhoWhisper: Automatic Speech Recognition for Vietnamese
+## 🎯 Transcription: Multiple Providers
 
-Meet Transcribe sử dụng **PhoWhisper** - mô hình ASR state-of-the-art cho tiếng Việt.
+Meet Transcribe hỗ trợ **nhiều phương pháp transcription**, cho phép bạn lựa chọn giữa local processing và cloud APIs:
 
-### Model Options
+### Providers Available
 
-| Model | Parameters | WER |
-|-------|-----------|-----|
-| `vinai/PhoWhisper-tiny` | 39M | Fast, suitable for real-time |
-| `vinai/PhoWhisper-base` | 74M | Balanced |
-| `vinai/PhoWhisper-small` | 244M | **Default** - Good balance |
-| `vinai/PhoWhisper-medium` | 769M | Better accuracy |
-| `vinai/PhoWhisper-large` | 1.55B | Best accuracy |
+| Provider | Ngôn Ngữ | Chi Phí | Tốc Độ | Use Case |
+|----------|----------|---------|---------|----------|
+| **Local (PhoWhisper)** | Tiếng Việt | Miễn phí | Trung bình | Privacy, Offline, VI only |
+| **OpenAI Whisper API** | 50+ languages | $0.006/phút | Nhanh | Multi-language, Accuracy |
+| **AssemblyAI** | 50+ languages | $0.00025/giây | Rất nhanh | Advanced features |
+| **Google Speech** | 125+ languages | $0.006/15s | Rất nhanh | Enterprise (future) |
 
-### Thay Đổi Model
+### Quick Setup
 
-Trong file `.env`:
+#### Local PhoWhisper (Default)
 ```env
+TRANSCRIPTION_PROVIDER=local
 WHISPER_MODEL=vinai/PhoWhisper-small
-DEVICE=cpu  # hoặc cuda nếu có GPU
+DEVICE=cpu  # hoặc cuda
 ```
 
-### Citation
+#### OpenAI Whisper API
+```env
+TRANSCRIPTION_PROVIDER=openai
+OPENAI_API_KEY=sk-proj-your-key
+TRANSCRIPTION_LANGUAGE=vi  # hoặc en, es, etc.
+```
+
+#### AssemblyAI
+```env
+TRANSCRIPTION_PROVIDER=assemblyai
+ASSEMBLYAI_API_KEY=your-key
+TRANSCRIPTION_LANGUAGE=vi
+```
+
+### PhoWhisper Models (Local Provider)
+
+| Model | Parameters | RAM | WER | Tốc Độ |
+|-------|-----------|-----|-----|--------|
+| `PhoWhisper-tiny` | 39M | ~1GB | 19.05 | ⭐⭐⭐⭐⭐ |
+| `PhoWhisper-base` | 74M | ~2GB | 16.19 | ⭐⭐⭐⭐ |
+| `PhoWhisper-small` | 244M | ~3GB | 11.08 | ⭐⭐⭐ (default) |
+| `PhoWhisper-medium` | 769M | ~6GB | 8.27 | ⭐⭐ |
+| `PhoWhisper-large` | 1.55B | ~12GB | 8.14 | ⭐ |
+
+📖 **Chi tiết**: Xem [TRANSCRIPTION.md](TRANSCRIPTION.md) để biết thêm về:
+- So sánh providers chi tiết
+- Pricing & performance
+- Setup instructions
+- Best practices
+- API endpoints
+
+### PhoWhisper Citation
 
 Nếu sử dụng PhoWhisper, vui lòng cite paper:
 

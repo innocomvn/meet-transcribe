@@ -17,7 +17,7 @@ import logging
 
 from config import settings
 from database import engine, Base, get_db
-from routers import meetings, recordings, transcriptions, minutes
+from routers import meetings, recordings, transcriptions, minutes, system
 from services.websocket_manager import ConnectionManager
 from services.transcription_service import TranscriptionService
 
@@ -93,6 +93,7 @@ app.include_router(meetings.router, prefix="/api/meetings", tags=["meetings"])
 app.include_router(recordings.router, prefix="/api/recordings", tags=["recordings"])
 app.include_router(transcriptions.router, prefix="/api/transcriptions", tags=["transcriptions"])
 app.include_router(minutes.router, prefix="/api/minutes", tags=["minutes"])
+app.include_router(system.router, prefix="/api/system", tags=["system"])
 
 # Mount static files
 app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")

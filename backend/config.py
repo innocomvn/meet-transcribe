@@ -26,9 +26,23 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str = ""
     ANTHROPIC_API_KEY: str = ""
 
-    # PhoWhisper Configuration
+    # Transcription Configuration
+    # Provider options: "local", "openai", "assemblyai", "google"
+    TRANSCRIPTION_PROVIDER: str = "local"
+    TRANSCRIPTION_LANGUAGE: str = "vi"  # Language code (vi, en, etc.)
+
+    # Local PhoWhisper Configuration (when TRANSCRIPTION_PROVIDER="local")
     WHISPER_MODEL: str = "vinai/PhoWhisper-small"
     DEVICE: str = "cpu"
+
+    # OpenAI Whisper API (when TRANSCRIPTION_PROVIDER="openai")
+    # OPENAI_API_KEY is required
+
+    # AssemblyAI API (when TRANSCRIPTION_PROVIDER="assemblyai")
+    ASSEMBLYAI_API_KEY: str = ""
+
+    # Google Speech-to-Text (when TRANSCRIPTION_PROVIDER="google")
+    GOOGLE_CREDENTIALS_PATH: str = ""
 
     # File Storage
     UPLOAD_DIR: str = "./uploads"
