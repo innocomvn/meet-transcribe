@@ -50,7 +50,15 @@ docker-compose --version
 
 ## 🚀 Quick Start
 
-### Cách 1: Sử dụng Makefile (Khuyến nghị)
+> **📝 Chọn Backend:** Meet Transcribe hỗ trợ 2 backends:
+> - **Python Backend** (mặc định) - Hỗ trợ local transcription với PhoWhisper
+> - **Node.js Backend** - Sử dụng API transcription (OpenAI/AssemblyAI)
+>
+> Xem [README.md - Backend Options](README.md#backend-options) để biết thêm chi tiết.
+
+### Quick Start - Python Backend (Default)
+
+**Cách 1: Sử dụng Makefile (Khuyến nghị)**
 
 ```bash
 # Clone repository
@@ -67,12 +75,7 @@ make quickstart
 make logs
 ```
 
-Truy cập:
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8000
-- **API Docs**: http://localhost:8000/docs
-
-### Cách 2: Sử dụng Docker Compose Trực Tiếp
+**Cách 2: Sử dụng Docker Compose Trực Tiếp**
 
 ```bash
 # Build images
@@ -84,6 +87,55 @@ docker-compose up -d
 # View logs
 docker-compose logs -f
 ```
+
+✅ **Truy cập:**
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
+
+---
+
+### Quick Start - Node.js Backend
+
+**Cách 1: Sử dụng Makefile (Khuyến nghị)**
+
+```bash
+# Clone repository
+git clone <repository-url>
+cd meet-transcribe
+
+# Copy và config environment
+cp backend-node/.env.example backend-node/.env
+# Edit backend-node/.env và thêm OPENAI_API_KEY hoặc ASSEMBLYAI_API_KEY
+
+# Start development environment
+make quickstart-node
+
+# View logs
+make logs-node
+```
+
+**Cách 2: Sử dụng Docker Compose Trực Tiếp**
+
+```bash
+# Setup environment
+cp backend-node/.env.example backend-node/.env
+# Edit backend-node/.env
+
+# Build images
+docker-compose -f docker-compose.node.yml build
+
+# Start services
+docker-compose -f docker-compose.node.yml up -d
+
+# View logs
+docker-compose -f docker-compose.node.yml logs -f
+```
+
+✅ **Truy cập:**
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/api
 
 ## 💻 Development
 
