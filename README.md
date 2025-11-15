@@ -11,6 +11,7 @@
 
 ## 📋 Mục Lục
 
+- [Backend Options](#backend-options)
 - [Tính năng](#tính-năng)
 - [Công nghệ](#công-nghệ)
 - [Cài đặt](#cài-đặt)
@@ -18,6 +19,65 @@
 - [Cấu trúc dự án](#cấu-trúc-dự-án)
 - [API Documentation](#api-documentation)
 - [PhoWhisper](#phowhisper)
+
+## ⚙️ Backend Options
+
+Meet Transcribe cung cấp **2 backend implementations** để bạn lựa chọn:
+
+### 🐍 Python Backend (FastAPI)
+
+**Thư mục:** `backend/`
+
+**Ưu điểm:**
+- ✅ Hỗ trợ **local transcription** với PhoWhisper (tiếng Việt)
+- ✅ Hỗ trợ API providers (OpenAI, AssemblyAI, Google Speech)
+- ✅ Tích hợp sẵn các thư viện ML (PyTorch, Transformers)
+- ✅ Xử lý AI/ML mạnh mẽ
+- ✅ Tốt cho offline deployment
+
+**Khuyến nghị sử dụng khi:**
+- Bạn cần phiên âm **tiếng Việt offline** với PhoWhisper
+- Bạn có GPU để tăng tốc transcription
+- Privacy là ưu tiên (không gửi audio lên cloud)
+
+### 🟢 Node.js Backend (NestJS)
+
+**Thư mục:** `backend-node/`
+
+**Ưu điểm:**
+- ✅ **TypeScript** - Type-safe, dễ maintain
+- ✅ Performance tốt cho I/O operations
+- ✅ Ecosystem JavaScript/TypeScript thống nhất
+- ✅ Hỗ trợ API providers (OpenAI, AssemblyAI)
+- ✅ NestJS architecture tốt cho large projects
+
+**Khuyến nghị sử dụng khi:**
+- Bạn sử dụng **API-based transcription** (OpenAI/AssemblyAI)
+- Team quen thuộc với TypeScript/JavaScript
+- Ưu tiên performance và scalability
+- Cloud deployment với API providers
+
+### 📊 So Sánh Chi Tiết
+
+| Feature | Python (FastAPI) | Node.js (NestJS) |
+|---------|------------------|------------------|
+| **Framework** | FastAPI | NestJS |
+| **Language** | Python 3.9+ | TypeScript |
+| **Database ORM** | SQLAlchemy | TypeORM |
+| **WebSocket** | Native WebSocket | Socket.IO |
+| **Local Transcription** | ✅ PhoWhisper | ❌ (Use Python) |
+| **OpenAI Whisper API** | ✅ | ✅ |
+| **AssemblyAI** | ✅ | ✅ |
+| **Type Safety** | Pydantic | TypeScript |
+| **Performance (I/O)** | Good | Excellent |
+| **ML/AI Libraries** | Excellent | Limited |
+| **Docker Support** | ✅ | ✅ |
+
+**API Compatibility:** ✅ Cả 2 backends đều có **API giống hệt nhau** - bạn có thể switch backend mà không cần đổi frontend!
+
+**Xem chi tiết:**
+- Python Backend: [backend/README.md](backend/README.md)
+- Node.js Backend: [backend-node/README.md](backend-node/README.md)
 
 ## 🚀 Tính Năng
 
@@ -53,13 +113,23 @@
 
 ## 🛠 Công Nghệ
 
-### Backend
+### Backend (2 Options)
+
+#### Python Backend (FastAPI)
 - **FastAPI** - Web framework hiện đại cho Python
 - **SQLAlchemy** - ORM cho database
 - **WebSocket** - Real-time communication
 - **PhoWhisper** - Vietnamese ASR model
 - **PyTorch** - Deep learning framework
 - **ReportLab & python-docx** - Document generation
+
+#### Node.js Backend (NestJS)
+- **NestJS** - Progressive Node.js framework
+- **TypeScript** - Type-safe JavaScript
+- **TypeORM** - TypeScript ORM
+- **Socket.IO** - WebSocket library
+- **OpenAI/AssemblyAI APIs** - Cloud transcription
+- **Winston** - Logging
 
 ### Frontend
 - **React** - UI library
@@ -74,6 +144,8 @@
 ### 🐳 Quick Start với Docker (Khuyến nghị)
 
 **Cách nhanh nhất để chạy ứng dụng:**
+
+#### Option 1: Python Backend (với PhoWhisper)
 
 ```bash
 # Clone repository
@@ -90,9 +162,27 @@ make quickstart
 docker-compose up -d
 ```
 
+#### Option 2: Node.js Backend (với API transcription)
+
+```bash
+# Clone repository
+git clone <repository-url>
+cd meet-transcribe
+
+# Copy và config .env
+cp backend-node/.env.example backend-node/.env
+# Edit backend-node/.env với OPENAI_API_KEY hoặc ASSEMBLYAI_API_KEY
+
+# Start với Docker
+docker-compose -f docker-compose.node.yml up -d
+
+# Production
+docker-compose -f docker-compose.node.prod.yml up -d
+```
+
 ✅ **Xong!** Truy cập:
 - Frontend: http://localhost:3000
-- Backend API: http://localhost:8000/docs
+- Backend API: http://localhost:8000/docs (Python) hoặc http://localhost:8000/api (Node.js)
 
 📖 **Chi tiết**: Xem [DOCKER.md](DOCKER.md) để biết thêm về Docker deployment
 
@@ -101,9 +191,9 @@ docker-compose up -d
 ### 💻 Cài Đặt Thủ Công (Manual Setup)
 
 #### Yêu Cầu
-- Python 3.9+
-- Node.js 18+
-- FFmpeg (cho xử lý audio/video)
+- **Python Backend:** Python 3.9+, FFmpeg
+- **Node.js Backend:** Node.js 18+
+- **Frontend:** Node.js 18+
 
 #### 1. Clone Repository
 ```bash
@@ -112,6 +202,8 @@ cd meet-transcribe
 ```
 
 #### 2. Cài Đặt Backend
+
+**Option A: Python Backend (FastAPI)**
 
 ```bash
 # Tạo virtual environment
@@ -129,6 +221,20 @@ cp .env.example .env
 # Chỉnh sửa .env file với cấu hình của bạn
 ```
 
+**Option B: Node.js Backend (NestJS)**
+
+```bash
+cd backend-node
+
+# Cài đặt dependencies
+npm install
+
+# Copy file cấu hình
+cp .env.example .env
+
+# Chỉnh sửa .env với OPENAI_API_KEY hoặc ASSEMBLYAI_API_KEY
+```
+
 #### 3. Cài Đặt Frontend
 
 ```bash
@@ -136,7 +242,9 @@ cd frontend
 npm install
 ```
 
-📖 **Chi tiết**: Xem [SETUP.md](SETUP.md) để biết hướng dẫn cài đặt chi tiết
+📖 **Chi tiết**: Xem backend-specific README:
+- [Python Backend Setup](backend/README.md)
+- [Node.js Backend Setup](backend-node/README.md)
 
 ## 🎮 Sử Dụng
 
@@ -161,14 +269,29 @@ make help
 
 #### Chạy Backend
 
+**Python Backend:**
 ```bash
 # Từ thư mục gốc
 cd backend
 python main.py
 ```
+- Backend: `http://localhost:8000`
+- API docs: `http://localhost:8000/docs`
 
-Backend sẽ chạy tại: `http://localhost:8000`
-API docs: `http://localhost:8000/docs`
+**Node.js Backend:**
+```bash
+# Từ thư mục gốc
+cd backend-node
+
+# Development
+npm run start:dev
+
+# Production
+npm run build
+npm run start:prod
+```
+- Backend: `http://localhost:8000`
+- API docs: `http://localhost:8000/api`
 
 #### Chạy Frontend
 
@@ -209,7 +332,7 @@ Frontend sẽ chạy tại: `http://localhost:3000`
 
 ```
 meet-transcribe/
-├── backend/
+├── backend/                    # 🐍 Python Backend (FastAPI)
 │   ├── main.py                 # FastAPI application
 │   ├── config.py               # Configuration
 │   ├── database.py             # Database models
@@ -218,11 +341,32 @@ meet-transcribe/
 │   │   ├── recordings.py
 │   │   ├── transcriptions.py
 │   │   └── minutes.py
-│   └── services/               # Business logic
-│       ├── transcription_service.py
-│       ├── websocket_manager.py
-│       └── minutes_generator.py
-├── frontend/
+│   ├── services/               # Business logic
+│   │   ├── transcription_service.py
+│   │   ├── transcription_providers.py
+│   │   ├── websocket_manager.py
+│   │   └── minutes_generator.py
+│   ├── Dockerfile              # Docker dev
+│   ├── Dockerfile.prod         # Docker production
+│   └── requirements.txt        # Python dependencies
+│
+├── backend-node/               # 🟢 Node.js Backend (NestJS)
+│   ├── src/
+│   │   ├── main.ts             # NestJS bootstrap
+│   │   ├── app.module.ts       # Root module
+│   │   ├── meetings/           # Meetings module
+│   │   ├── recordings/         # Recordings module
+│   │   ├── transcriptions/     # Transcriptions module
+│   │   ├── minutes/            # Minutes module
+│   │   ├── transcription/      # Transcription service
+│   │   ├── websocket/          # WebSocket gateway
+│   │   └── system/             # System info
+│   ├── Dockerfile              # Docker dev
+│   ├── Dockerfile.prod         # Docker production
+│   ├── package.json            # Node dependencies
+│   └── tsconfig.json           # TypeScript config
+│
+├── frontend/                   # ⚛️ React Frontend
 │   ├── src/
 │   │   ├── pages/              # React pages
 │   │   │   ├── Home.jsx
@@ -238,11 +382,19 @@ meet-transcribe/
 │   │       ├── useWebRTC.js
 │   │       ├── useRecording.js
 │   │       └── useWebSocket.js
+│   ├── Dockerfile              # Docker dev
+│   ├── Dockerfile.prod         # Docker production
 │   ├── package.json
 │   └── vite.config.js
-├── requirements.txt            # Python dependencies
+│
+├── docker-compose.yml          # Docker dev (Python backend)
+├── docker-compose.prod.yml     # Docker prod (Python backend)
+├── docker-compose.node.yml     # Docker dev (Node.js backend)
+├── docker-compose.node.prod.yml # Docker prod (Node.js backend)
+├── Makefile                    # Convenient commands
 ├── .env.example                # Environment template
-├── .gitignore
+├── DOCKER.md                   # Docker guide
+├── TRANSCRIPTION.md            # Transcription guide
 └── README.md
 ```
 

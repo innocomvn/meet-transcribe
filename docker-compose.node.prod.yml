@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  # Node.js Backend - Production
+  backend-node:
+    build:
+      context: ./backend-node
+      dockerfile: Dockerfile.prod
+    container_name: meet-transcribe-backend-node-prod
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend-node-uploads:/app/uploads
+      - backend-node-data:/app/data
+    environment:
+      # Server
+      - PORT=8000
+      - NODE_ENV=production
+
+      # Database
+      - DATABASE_PATH=/app/data/meet-transcribe.db
+
+      # Transcription Provider
+      - TRANSCRIPTION_PROVIDER=${TRANSCRIPTION_PROVIDER:-openai}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ASSEMBLYAI_API_KEY=${ASSEMBLYAI_API_KEY}
+
+      # CORS
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost}
+    restart: always
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8000/api/system/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    networks:
+      - meet-transcribe-network
+
+  # Frontend - Production
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: meet-transcribe-frontend-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # SSL certificates (if needed)
+      - ./ssl:/etc/nginx/ssl:ro
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+      - VITE_WS_URL=${VITE_WS_URL:-ws://localhost:8000}
+    depends_on:
+      - backend-node
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    networks:
+      - meet-transcribe-network
+
+volumes:
+  backend-node-uploads:
+    driver: local
+  backend-node-data:
+    driver: local
+
+networks:
+  meet-transcribe-network:
+    driver: bridge
